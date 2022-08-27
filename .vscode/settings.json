@@ -1,0 +1,11 @@
+{
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "E:/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x86-windows-static",
+    },
+    "files.associations": {
+        "xstring": "cpp",
+        "string": "cpp",
+        "xutility": "cpp"
+    }
+}
