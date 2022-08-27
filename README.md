@@ -4,9 +4,9 @@ use raylib make game demo
 编译成功后将exe放到asset文件同级目录运行游戏。
 
 # How to build
-安装 vscode
-安装 cmake 
-安装 vcpkg 
+>- 安装 vscode
+>- 安装 cmake 
+>- 安装 vcpkg 
 
 
 cmakeList.txt目录执行下面的两条编译命令
