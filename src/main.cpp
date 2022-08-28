@@ -5,6 +5,6 @@ int main(void)
     game = new Game();
     game->load();
     game->run();
-    delete game;
+    delete (game);
     return 0;
 }

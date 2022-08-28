@@ -10,33 +10,52 @@ class Game
 {
 private:
     Texture2D imagebox[6];
+    Texture2D uibox[1];
     Vector2 postion;
     //配置信息
-    int screenWidth = 800;
-    int screenHeight = 600;
-    int FPS = 60;
-    int count = 0;
-    int framesCounter = 0;
-    int framesSpeed = 8;
+    int screenWidth;
+    int screenHeight;
+    int FPS;
+    int count;
+    int framesCounter;
+    int framesSpeed;
     RenderTexture2D target;
-    void unloadTexture();
-    void controller();
+    void unloadTexture(void);
+    void controller(void);
 
 public:
-    void run();
-    void load();
+    void run(void);
+    void load(void);
+    Game();
+    ~Game();
 };
 
-void Game::load()
+Game::Game(void)
 {
+    screenWidth = 800;
+    screenHeight = 600;
+    FPS = 60;
+    count = 0;
+    framesCounter = 0;
+    framesSpeed = 8;
     //初始坐标
     postion.x = 400;
     postion.y = 250;
+}
+Game::~Game(void)
+{
+    UnloadRenderTexture(target);
+    unloadTexture();
+    CloseWindow();
+}
+void Game::load(void)
+{
+
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "games");
     target = LoadRenderTexture(screenWidth, screenHeight);
     SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
-    //  Set FPS 60
+    // Set FPS 60
     SetTargetFPS(FPS);
 
     //加载资源
@@ -46,9 +65,13 @@ void Game::load()
         imagebox[i] = LoadTextureFromImage(man);
         UnloadImage(man);
     }
+    //加载UI
+    Image ui = LoadImage("asset/menu.png");
+    uibox[0] = LoadTextureFromImage(ui);
+    UnloadImage(ui);
 };
 
-void Game::run()
+void Game::run(void)
 {
     while (!WindowShouldClose())
     {
@@ -58,16 +81,23 @@ void Game::run()
         if (framesCounter >= (FPS / framesSpeed))
         {
             count++;
+            if (count > 5)
+            {
+                count = 0;
+            }
+
             framesCounter = 0;
         }
+        //控制器
         controller();
-        //
+        //绘制东西到画布上
         BeginTextureMode(target);
         ClearBackground(WHITE);
-        DrawTexture(imagebox[count % 6], postion.x, postion.y, WHITE);
+        DrawTexture(imagebox[count], postion.x, postion.y, WHITE);
         DrawTexture(imagebox[0], 0, 200, WHITE);
+        // ui
+        DrawTexture(uibox[0], 0, 0, WHITE);
         DrawFPS(1, 1);
-
         EndTextureMode();
         //开始绘制
         BeginDrawing();
@@ -78,12 +108,9 @@ void Game::run()
                        Vector2{0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
-
-    unloadTexture();
-    CloseWindow();
 };
 
-void Game::unloadTexture()
+void Game::unloadTexture(void)
 {
     //卸载资源
     for (size_t i = 0; i < 6; i++)
@@ -92,7 +119,7 @@ void Game::unloadTexture()
     }
 }
 
-void Game::controller()
+void Game::controller(void)
 {
     if (IsKeyDown(KEY_LEFT))
     {
