@@ -11,7 +11,9 @@ class Game
 private:
     Texture2D imagebox[6];
     Texture2D uibox[1];
+    Texture2D map;
     Vector2 postion;
+    float move_speed;
     //配置信息
     int screenWidth;
     int screenHeight;
@@ -36,11 +38,12 @@ Game::Game(void)
     screenHeight = 600;
     FPS = 60;
     count = 0;
+    move_speed = 2.0;
     framesCounter = 0;
     framesSpeed = 8;
     //初始坐标
-    postion.x = 400;
-    postion.y = 250;
+    postion.x = -1200;
+    postion.y = -1200;
 }
 Game::~Game(void)
 {
@@ -50,12 +53,11 @@ Game::~Game(void)
 }
 void Game::load(void)
 {
-
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "games");
     target = LoadRenderTexture(screenWidth, screenHeight);
     SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
-    // Set FPS 60
+    // FPS 60
     SetTargetFPS(FPS);
 
     //加载资源
@@ -69,6 +71,10 @@ void Game::load(void)
     Image ui = LoadImage("asset/menu.png");
     uibox[0] = LoadTextureFromImage(ui);
     UnloadImage(ui);
+    //加载地图
+    Image map_temp = LoadImage("asset/map.png");
+    map = LoadTextureFromImage(map_temp);
+    UnloadImage(map_temp);
 };
 
 void Game::run(void)
@@ -93,12 +99,18 @@ void Game::run(void)
         //绘制东西到画布上
         BeginTextureMode(target);
         ClearBackground(WHITE);
-        DrawTexture(imagebox[count], postion.x, postion.y, WHITE);
-        DrawTexture(imagebox[0], 0, 200, WHITE);
+        // map
+        DrawTexture(map, postion.x, postion.y, WHITE);
+        // player
+        DrawTexture(imagebox[count], screenWidth / 2, screenHeight / 2, WHITE);
         // ui
-        DrawTexture(uibox[0], 0, 0, WHITE);
+        DrawTexture(uibox[0], (screenWidth - uibox[0].width) / 2, screenHeight - 126, WHITE);
+        Vector2 mouse = GetMousePosition();
+        auto text_mouse = "mouse position :" + to_string(mouse.x) + ":" + to_string(mouse.y);
+        DrawText(text_mouse.c_str(), screenWidth / 2, 3, 20, RED);
         DrawFPS(1, 1);
         EndTextureMode();
+
         //开始绘制
         BeginDrawing();
         ClearBackground(BLACK);
@@ -117,24 +129,26 @@ void Game::unloadTexture(void)
     {
         UnloadTexture(imagebox[i]);
     }
+    UnloadTexture(uibox[0]);
+    UnloadTexture(map);
 }
 
 void Game::controller(void)
 {
     if (IsKeyDown(KEY_LEFT))
     {
-        postion.x -= 1;
+        postion.x += move_speed;
     }
     if (IsKeyDown(KEY_RIGHT))
     {
-        postion.x += 1;
+        postion.x -= move_speed;
     }
     if (IsKeyDown(KEY_UP))
     {
-        postion.y -= 1;
+        postion.y += move_speed;
     }
     if (IsKeyDown(KEY_DOWN))
     {
-        postion.y += 1;
+        postion.y -= move_speed;
     }
 }

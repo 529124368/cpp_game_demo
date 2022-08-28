@@ -6,7 +6,9 @@
     "files.associations": {
         "xstring": "cpp",
         "string": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "atomic": "cpp",
+        "memory": "cpp"
     },
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     "terminal.integrated.profiles.windows": {
