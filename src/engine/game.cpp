@@ -102,7 +102,7 @@ void Game::run(void)
         // map
         DrawTexture(map, postion.x, postion.y, WHITE);
         // player
-        DrawTexture(imagebox[count], screenWidth / 2, screenHeight / 2, WHITE);
+        DrawTexture(imagebox[count], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
         // ui
         DrawTexture(uibox[0], (screenWidth - uibox[0].width) / 2, screenHeight - 126, WHITE);
         Vector2 mouse = GetMousePosition();
