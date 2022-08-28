@@ -1,11 +1,12 @@
 #include "raylib.h"
+#include "raymath.h"
 #pragma comment(lib, "winmm")
 #include <iostream>
 #include <string>
+#include "main.h"
 using namespace std;
-// 函数声明
-void move();
-void unloadTexture();
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 //全局变量asd
 Texture2D imagebox[6];
 int sprite_position[2] = {400, 250};
@@ -14,7 +15,7 @@ int main(void)
 {
     //配置信息
     const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenHeight = 600;
     const int FPS = 60;
     int count = 0;
     int framesCounter = 0;
@@ -22,8 +23,12 @@ int main(void)
 
     string titile;
     titile = "games";
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, titile.c_str());
-    // Set FPS 60
+    RenderTexture2D target = LoadRenderTexture(screenWidth, screenHeight);
+    SetTextureFilter(target.texture, TEXTURE_FILTER_BILINEAR);
+    // ToggleFullscreen();
+    //  Set FPS 60
     SetTargetFPS(FPS);
     //加载资源
     for (size_t i = 0; i < 6; i++)
@@ -34,6 +39,7 @@ int main(void)
     }
     while (!WindowShouldClose())
     {
+        float scale = MIN((float)GetScreenWidth() / screenWidth, (float)GetScreenHeight() / screenHeight);
         framesCounter++;
 
         if (framesCounter >= (FPS / framesSpeed))
@@ -41,11 +47,22 @@ int main(void)
             count++;
             framesCounter = 0;
         }
-        move();
-        BeginDrawing();
+        controller();
+        //
+        BeginTextureMode(target);
         ClearBackground(WHITE);
         DrawTexture(imagebox[count % 6], sprite_position[0], sprite_position[1], WHITE);
-        DrawText("c++ games demo!", 0, 0, 50, BLACK);
+        DrawTexture(imagebox[0], 0, 200, WHITE);
+        DrawFPS(1, 1);
+
+        EndTextureMode();
+        //开始绘制
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawTexturePro(target.texture, Rectangle{0.0, 0.0, (float)target.texture.width, -((float)target.texture.height)},
+                       Rectangle{(GetScreenWidth() - ((float)screenWidth * scale)) * 0.5f, (GetScreenHeight() - ((float)screenHeight * scale)) * 0.5f,
+                                 (float)screenWidth * scale, float(screenHeight * scale)},
+                       Vector2{0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
 
@@ -55,7 +72,7 @@ int main(void)
     return 0;
 }
 
-void move()
+void controller()
 {
     if (IsKeyDown(KEY_LEFT))
     {
