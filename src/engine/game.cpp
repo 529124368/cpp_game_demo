@@ -9,7 +9,7 @@ using namespace std;
 class Game
 {
 private:
-    Texture2D imagebox[6];
+    Texture2D imagebox[1];
     Texture2D uibox[1];
     Texture2D map;
     Vector2 postion;
@@ -61,12 +61,15 @@ void Game::load(void)
     SetTargetFPS(FPS);
 
     //加载资源
-    for (size_t i = 0; i < 6; i++)
-    {
-        Image man = LoadImage(("asset/man" + to_string(i) + ".png").c_str());
-        imagebox[i] = LoadTextureFromImage(man);
-        UnloadImage(man);
-    }
+    // for (size_t i = 0; i < 6; i++)
+    // {
+    //     Image man = LoadImage(("asset/man" + to_string(i) + ".png").c_str());
+    //     imagebox[i] = LoadTextureFromImage(man);
+    //     UnloadImage(man);
+    // }
+    Image man = LoadImage("asset/player.png");
+    imagebox[0] = LoadTextureFromImage(man);
+    UnloadImage(man);
     //加载UI
     Image ui = LoadImage("asset/menu.png");
     uibox[0] = LoadTextureFromImage(ui);
@@ -86,11 +89,11 @@ void Game::run(void)
 
         if (framesCounter >= (FPS / framesSpeed))
         {
-            count++;
-            if (count > 5)
-            {
-                count = 0;
-            }
+            // count++;
+            // if (count > 5)
+            // {
+            //     count = 0;
+            // }
 
             framesCounter = 0;
         }
@@ -102,7 +105,8 @@ void Game::run(void)
         // map
         DrawTexture(map, postion.x, postion.y, WHITE);
         // player
-        DrawTexture(imagebox[count], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
+        // DrawTexture(imagebox[count], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
+        DrawTexture(imagebox[0], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
         // ui
         DrawTexture(uibox[0], (screenWidth - uibox[0].width) / 2, screenHeight - 126, WHITE);
         Vector2 mouse = GetMousePosition();
