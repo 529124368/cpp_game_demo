@@ -1,10 +1,9 @@
 #include "game.h"
+#include <memory>
 int main(void)
 {
-    Game *game;
-    game = new Game();
+    std::unique_ptr<Game> game(std::make_unique<Game>());
     game->load();
     game->run();
-    delete (game);
     return 0;
 }

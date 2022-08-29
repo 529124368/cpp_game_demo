@@ -2,6 +2,7 @@
 #include "raymath.h"
 #include <string>
 #include <iostream>
+#include <filesystem>
 using namespace std;
 #pragma comment(lib, "winmm")
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -42,8 +43,8 @@ Game::Game(void)
     framesCounter = 0;
     framesSpeed = 8;
     //初始坐标
-    postion.x = -1200;
-    postion.y = -1200;
+    postion.x = -1800;
+    postion.y = -1800;
 }
 Game::~Game(void)
 {
@@ -103,12 +104,12 @@ void Game::run(void)
         BeginTextureMode(target);
         ClearBackground(WHITE);
         // map
-        DrawTexture(map, postion.x, postion.y, WHITE);
+        DrawTextureEx(map, postion, 1, 1.3, WHITE);
         // player
         // DrawTexture(imagebox[count], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
         DrawTexture(imagebox[0], screenWidth / 2 - 40, screenHeight / 2 - 40, WHITE);
         // ui
-        DrawTexture(uibox[0], (screenWidth - uibox[0].width) / 2, screenHeight - 126, WHITE);
+        DrawTexture(uibox[0], (screenWidth - uibox[0].width) / 2, screenHeight - 144, WHITE);
         Vector2 mouse = GetMousePosition();
         auto text_mouse = "mouse position :" + to_string(mouse.x) + ":" + to_string(mouse.y);
         DrawText(text_mouse.c_str(), screenWidth / 2, 3, 20, RED);
